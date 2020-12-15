@@ -19,7 +19,8 @@ def generate_subcommands():
                 'partition': simple_bio.CommandPartition.get_command_data(order=10),
                 'base-comp': simple_bio.CommandBaseComposition.get_command_data(order=11),
                 'bed-fasta': simple_bio.CommandBedFasta.get_command_data(order=12),
-                'to-fasta': simple_bio.CommandToFasta.get_command_data(order=13)}
+                'to-fasta': simple_bio.CommandToFasta.get_command_data(order=13),
+                'number': simple_bio.CommandNumber.get_command_data(order=14)}
     return commands
 
 
@@ -60,6 +61,8 @@ def main():
         simple_bio.CommandBedFasta.run_program(command_options, print_command_usage)
     elif command == 'to-fasta':
         simple_bio.CommandToFasta.run_program(command_options, print_command_usage)
+    elif command == 'number':
+        simple_bio.CommandNumber.run_program(command_options, print_command_usage)
 
 
 if __name__ == '__main__':

@@ -571,33 +571,50 @@ class CommandToFasta(object):
         apply_function_and_output(filename, output_filename, write_sequence, 'fastq')
 
 
+# !---------- `number` command ----------!
+class CommandNumber(object):
+    @staticmethod
+    def get_description():
+        return 'Add an incrementing number of every sequence ID.'
 
+    @staticmethod
+    def get_option_data():
+        options = opth.default_option_map_input_output()
+        options['input']['description'] = 'An input sequence file'
+        options['output']['description'] = 'An output sequence file'
+        options['prefix'] = {'order': 3,
+                             'short': 'p',
+                             'long': 'prefix',
+                             'input_name': '<prefix_text>',
+                             'description': "The text to be used as a prefix and added to each record id",
+                             'optional': True}
+        return options
 
+    @staticmethod
+    def get_command_data(order=0):
+        command_map = {'description': CommandNumber.get_description(),
+                       'options': CommandNumber.get_option_data(),
+                       'order': order}
+        return command_map
 
+    @staticmethod
+    def run_program(argument_map, print_usage_function):
+        input_filename = opth.validate_required('input', argument_map, print_usage_function)
+        output_filename = opth.validate_required('output', argument_map, print_usage_function)
+        prefix = opth.with_default('prefix', argument_map, '')
 
+        seq_type = 'fasta'
+        if file_tools.looks_fastq(input_filename):
+            seq_type = 'fastq'
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        seq_count = 0
+        output_handle = open(output_filename, 'w')
+        with open(input_filename) as handle:
+            for seq_rec in SeqIO.parse(handle, seq_type):
+                seq_id = seq_rec.id
+                new_id = '_'.join([prefix, seq_id, str(seq_count)])
+                seq_count += 1
+                seq_rec.id = new_id
+                SeqIO.write(seq_rec, output_handle, seq_type)
+        output_handle.close()
 
