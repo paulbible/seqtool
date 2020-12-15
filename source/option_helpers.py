@@ -72,7 +72,7 @@ def opt_to_options_transform(option_map):
 def print_usage_maker_base(command_description, options, command_name, epilogue=None):
     command_string = 'usage: %s' % command_name
     command_string += ' '
-    option_recs = options.values()
+    option_recs = list(options.values())
     option_recs.sort(key=lambda x: x['order'])
     for opt in option_recs:
         if opt['short'] == 'h':
@@ -178,7 +178,7 @@ def print_subcommands_usage_maker(subcommand_options, description):
 def parse_options_maker(options, print_usage_func, arg_start=1):
     short_opt_codes = ''
     long_opt_codes = []
-    option_recs = options.values()
+    option_recs = list(options.values())
     option_recs.sort(key=lambda x: x['order'])
     for opt_rec in option_recs:
         if opt_rec['input_name']:
