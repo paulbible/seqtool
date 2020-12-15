@@ -28,7 +28,7 @@ def main():
     description = 'A general tool for working with sequences.'
     print_usage_w_subcommands = opth.print_subcommands_usage_maker(subcommand_info, description)
 
-    # extract the commnad and parse the options
+    # extract the command and parse the options
     command = opth.parse_command_options(subcommand_info, print_usage_w_subcommands)
     print_command_usage = functools.partial(print_usage_w_subcommands, command)
     parse_function = opth.parse_options_maker(subcommand_info[command]['options'], print_command_usage, arg_start=2)

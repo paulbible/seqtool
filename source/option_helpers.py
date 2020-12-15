@@ -131,7 +131,7 @@ def print_subcommands_usage_maker(subcommand_options, description):
     for command in subcommand_options:
         command_list.append((subcommand_options[command]['order'], command))
     command_list.sort()
-    command_order = map(lambda x: x[1], command_list)
+    command_order = list(map(lambda x: x[1], command_list))
 
     program_name = os.path.basename(sys.argv[0])
     command_string = 'usage: %s command [options]' % program_name
