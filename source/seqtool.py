@@ -1,11 +1,10 @@
-#!/bin/env python
+#!/bin/env python3
 from pprint import pprint
 import functools
 import option_helpers as opth
 # command imports
 import simple_bio
 import seq_filter
-
 
 def generate_subcommands():
     commands = {'count': simple_bio.CommandCount.get_command_data(order=1),
