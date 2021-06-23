@@ -671,7 +671,7 @@ class CommandSliding(object):
                 new_seq = seq_rec[start:end]
                 new_id = '_'.join([seq_id,str(start),str(end)])
                 new_seq.id = new_id
-                SeqIO.write(seq_rec, output_handle, input_seq_type)
+                SeqIO.write(new_seq, output_handle, input_seq_type)
 
                 # slide window by step
                 start = start + step_size
