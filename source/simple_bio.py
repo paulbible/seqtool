@@ -453,7 +453,7 @@ class CommandBaseComposition(object):
         apply_function_to_sequences(filename, print_distribution_func, seq_type)
 
 
-# !---------- template command ----------!
+# !---------- 'bed-fasta' command ----------!
 class CommandBedFasta(object):
     @staticmethod
     def get_description():
@@ -539,7 +539,7 @@ class CommandBedFasta(object):
         fout.close()
 
 
-# !---------- template command ----------!
+# !---------- 'to-fasta' command ----------!
 class CommandToFasta(object):
     @staticmethod
     def get_description():
@@ -618,3 +618,63 @@ class CommandNumber(object):
                 SeqIO.write(seq_rec, output_handle, seq_type)
         output_handle.close()
 
+
+# !---------- 'sliding' command ----------!
+class CommandSliding(object):
+    @staticmethod
+    def get_description():
+        return 'Divide a sequence into subsequences using a sliding window method.'
+
+    @staticmethod
+    def get_option_data():
+        options = opth.default_option_map_input_output()
+        options['input']['description'] = 'An input sequence file'
+        options['output']['description'] = 'An output sequence file'
+        options['window'] = {'order': 3,
+                             'short': 'w',
+                             'long': 'window',
+                             'input_name': '<window_size>',
+                             'description': "The size of the window in bp.",
+                             'optional': False}
+        options['step'] = {'order': 4,
+                           'short': 's',
+                           'long': 'step',
+                           'input_name': '<step_size>',
+                           'description': "The size of the step between window sequences.",
+                           'optional': False}
+        return options
+
+    @staticmethod
+    def get_command_data(order=0):
+        command_map = {'description': CommandSliding.get_description(),
+                       'options': CommandSliding.get_option_data(),
+                       'order': order}
+        return command_map
+
+    @staticmethod
+    def run_program(argument_map, print_usage_function):
+        input_filename = opth.validate_required('input', argument_map, print_usage_function)
+        output_filename = opth.validate_required('output', argument_map, print_usage_function)
+        window_size = opth.validate_required_int('window', argument_map, print_usage_function)
+        step_size = opth.validate_required_int('step', argument_map, print_usage_function)
+
+        seq_type = 'fasta'
+        if file_tools.looks_fastq(input_filename):
+            seq_type = 'fastq'
+
+        def gen_window_seqs(output_handle, input_seq_type, seq_rec):
+            seq_id = seq_rec.id
+            seq_len = len(seq_rec)
+            start = 0
+            end = start + window_size
+            while start < seq_len - window_size:
+                new_seq = seq_rec[start:end]
+                new_id = '_'.join([seq_id,str(start),str(end)])
+                new_seq.id = new_id
+                SeqIO.write(seq_rec, output_handle, input_seq_type)
+
+                # slide window by step
+                start = start + step_size
+                end = start + window_size
+
+        apply_function_and_output(input_filename, output_filename, gen_window_seqs, seq_type)

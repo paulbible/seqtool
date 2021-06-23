@@ -6,6 +6,7 @@ import option_helpers as opth
 import simple_bio
 import seq_filter
 
+
 def generate_subcommands():
     commands = {'count': simple_bio.CommandCount.get_command_data(order=1),
                 'ids': simple_bio.CommandIds.get_command_data(order=2),
@@ -20,7 +21,8 @@ def generate_subcommands():
                 'base-comp': simple_bio.CommandBaseComposition.get_command_data(order=11),
                 'bed-fasta': simple_bio.CommandBedFasta.get_command_data(order=12),
                 'to-fasta': simple_bio.CommandToFasta.get_command_data(order=13),
-                'number': simple_bio.CommandNumber.get_command_data(order=14)}
+                'number': simple_bio.CommandNumber.get_command_data(order=14),
+                'sliding': simple_bio.CommandSliding.get_command_data(order=15)}
     return commands
 
 
@@ -63,6 +65,8 @@ def main():
         simple_bio.CommandToFasta.run_program(command_options, print_command_usage)
     elif command == 'number':
         simple_bio.CommandNumber.run_program(command_options, print_command_usage)
+    elif command == 'sliding':
+        simple_bio.CommandSliding.run_program(command_options, print_command_usage)
 
 
 if __name__ == '__main__':
